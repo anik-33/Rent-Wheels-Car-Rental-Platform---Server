@@ -40,13 +40,30 @@ async function run() {
     })
 
   // post method
-   app.post("/model", async(req,res)=>{
+   app.post("/allcar", async(req,res)=>{
     const data = req.body;
     const result = await carCollection.insertOne(data);
     res.send(result)
    })
     
 
+
+
+
+
+
+    // latest 6 data
+    app.get("/latest-cars", async (req, res) => {
+      const result = await carCollection
+        .find()
+        .sort({ created_at: "desc" })
+        .limit(6)
+        .toArray();
+
+      console.log(result);
+
+      res.send(result);
+    });
     
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
