@@ -30,10 +30,19 @@ async function run() {
 
     const db = client.db('cars-db')
     const carCollection = db.collection('cars')
+    const testimonial =db.collection('testimonial')
     // get method
     app.get('/allcar',async(req,res)=>{
 
         const result = await carCollection.find().toArray()
+
+        res.send(result)
+
+    })
+    // get method for testimonial
+    app.get('/testimonial',async(req,res)=>{
+
+        const result = await testimonial.find().toArray()
 
         res.send(result)
 
@@ -56,7 +65,7 @@ async function run() {
     app.get("/latest-cars", async (req, res) => {
       const result = await carCollection
         .find()
-        .sort({ created_at: "desc" })
+        .sort({ CreatedAt: "desc" })
         .limit(6)
         .toArray();
 
