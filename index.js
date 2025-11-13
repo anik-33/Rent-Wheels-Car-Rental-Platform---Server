@@ -31,6 +31,7 @@ async function run() {
         const db = client.db('cars-db')
         const carCollection = db.collection('cars')
         const testimonial = db.collection('testimonial')
+        const bookCollection= db.collection('bookings')
         // get method
         app.get('/allcar', async (req, res) => {
 
@@ -47,6 +48,14 @@ async function run() {
             res.send(result)
 
         })
+        // get method for bookings
+        app.get('/car/bookings', async (req, res) => {
+
+            const result = await bookCollection.find().toArray()
+
+            res.send(result)
+
+        })
 
         // post method
         app.post("/allcar", async (req, res) => {
@@ -54,6 +63,7 @@ async function run() {
             const result = await carCollection.insertOne(data);
             res.send(result)
         })
+       
 
 
     // find single car
@@ -99,6 +109,12 @@ async function run() {
             const result = await carCollection.find({ ProviderEmail: email }).toArray()
             res.send(result)
         })
+        // get method for find my booking
+        app.get("/car/mybooking", async (req, res) => {
+            const email = req.query.email
+            const result = await bookCollection.find({ BookEmail: email }).toArray()
+            res.send(result)
+        })
 
     //PUT APIS
 
@@ -121,7 +137,27 @@ async function run() {
       });
     });
 
+    // Patch api
+    app.patch('/car/:id', async(req,res)=>{
+        const id = req.params.id;
+        const {Status} =req.body;
+        const query = {_id: new ObjectId(id)}
+        const update = {
+            $set:{
+                Status:Status,
+            }
+        }
+        const options ={}
+        const result = await carCollection.updateOne(query,update,options)
+
+         res.send({
+        success: true,
+        result,
+      });
+    })
+
     // delete
+
 
     app.delete("/car/:id",  async (req, res) => {
       const { id } = req.params;
