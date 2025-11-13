@@ -63,7 +63,12 @@ async function run() {
             const result = await carCollection.insertOne(data);
             res.send(result)
         })
-       
+        // post method
+        app.post("/car/bookings", async (req, res) => {
+            const data = req.body;
+            const result = await bookCollection.insertOne(data);
+            res.send(result)
+        })
 
 
     // find single car
